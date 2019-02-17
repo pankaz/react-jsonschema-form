@@ -26,6 +26,7 @@ const OptionsList = props => {
     closeOptionPanel,
   } = props;
 
+  const hideColumns = [];
   if (options.length == 0) {
     return <p>No Records Found...</p>;
   }
@@ -36,9 +37,13 @@ const OptionsList = props => {
         <TableHead>
           <TableRow>
             {isMultiselect && <TableCell />}
-            {cols.map((column, key) => (
-              <TableCell key={key}>{column.name}</TableCell>
-            ))}
+            {cols.map((column, key) => {
+              if (!column.hasOwnProperty("hide")) {
+                return <TableCell key={key}>{column.name}</TableCell>;
+              } else {
+                hideColumns.push(column.key);
+              }
+            })}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -55,9 +60,11 @@ const OptionsList = props => {
                   />
                 </TableCell>
               )}
-              {Object.keys(row).map((cell, cellkey) => (
-                <TableCell key={cellkey}>{row[cell]}</TableCell>
-              ))}
+              {Object.keys(row).map((cell, cellkey) => {
+                if (hideColumns.indexOf(cell) === -1) {
+                  return <TableCell key={cellkey}>{row[cell]}</TableCell>;
+                }
+              })}
             </TableRow>
           ))}
         </TableBody>

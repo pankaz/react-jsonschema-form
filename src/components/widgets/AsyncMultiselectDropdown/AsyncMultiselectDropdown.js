@@ -17,6 +17,8 @@ class AsyncMultiselectDropdown extends Component {
       selectedOptions: [],
       isLoading: false,
       totalOptionsCount: 0,
+      selectionColumn: null,
+      primaryColumn: null,
     };
   }
 
@@ -51,10 +53,18 @@ class AsyncMultiselectDropdown extends Component {
       schema: { loadOptions, pageSize, loadOptionsCount, cols },
     } = this.props;
     let selectionColumn = "";
+    let primaryColumn = "";
+
+    for (let index = 0; index < cols.length; index++) {
+      if (cols[index].displaySelected) {
+        selectionColumn = cols[index].key;
+        break;
+      }
+    }
 
     for (let index = 0; index < cols.length; index++) {
       if (cols[index].primary) {
-        selectionColumn = cols[index].key;
+        primaryColumn = cols[index].key;
         break;
       }
     }
@@ -70,6 +80,7 @@ class AsyncMultiselectDropdown extends Component {
         pageSize,
         totalOptionsCount: resLoadOptionsCount,
         selectionColumn,
+        primaryColumn,
         isLoading: false,
       })
     );
@@ -79,7 +90,7 @@ class AsyncMultiselectDropdown extends Component {
     this.setState({ pageNumber: page }, this.fetchData);
 
   handleRowClick = (event, selectedRow) => {
-    let { selectedOptions, isMultiselect } = this.state;
+    let { selectedOptions, isMultiselect, primaryColumn } = this.state;
     const indexOfSelectedOption = this.getIndexOfSelectedRowFromSelectedOptionsList(
       selectedRow
     );
@@ -97,7 +108,7 @@ class AsyncMultiselectDropdown extends Component {
     this.setState({ selectedOptions, searchText: " " });
     // TODO: Considering that for now just working on single value select
     if (selectedOptions && selectedOptions.length > 0) {
-      this.props.onChange(selectedOptions[0].title);
+      this.props.onChange(selectedOptions[0][primaryColumn]);
     } else {
       this.props.onChange(null);
     }

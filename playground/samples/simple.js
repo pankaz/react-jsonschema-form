@@ -15,10 +15,10 @@ module.exports = {
         // The col with primary set to true is the value which will be returned.
         // So make sure that the data type of that key matches with type specified.
         cols: [
-          { name: "ID", key: "userId", hide: true, primary: true },
-          { name: "USER ID", key: "id" },
-          { name: "Title", key: "title", displaySelected: true },
-          { name: "Body", key: "body" },
+          { name: "USER ID", key: "userId", hide: true },
+          { name: "ID", key: "id", displaySelected: true },
+          { name: "Title", key: "title", primary: true },
+          { name: "Body", key: "body", hide: true },
         ],
         selectedOptions: [],
         loadOptions: (searchText, pageNumber, pageSize) => {
