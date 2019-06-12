@@ -211,6 +211,7 @@ module.exports = {
       "ui:widget": "asyncMultiselectDropdown",
     },
     firstName: {
+      "ui:autofocus": true,
       "ui:emptyValue": "",
     },
     age: {

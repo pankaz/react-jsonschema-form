@@ -11,7 +11,6 @@ function RangeWidget(props) {
       widgets: { BaseInput },
     },
   } = props;
-
   return (
     <div className="field-range-wrapper">
       <BaseInput

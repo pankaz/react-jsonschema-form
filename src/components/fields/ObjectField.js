@@ -30,7 +30,7 @@ function DefaultObjectFieldTemplate(props) {
 
   const { TitleField, DescriptionField } = props;
   return (
-    <div>
+    <div id={props.idSchema.$id}>
       {(props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}

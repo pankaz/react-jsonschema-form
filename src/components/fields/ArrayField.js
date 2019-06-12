@@ -101,7 +101,7 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <div className={props.className}>
+    <div className={props.className} id={props.idSchema.$id}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -137,7 +137,7 @@ function DefaultFixedArrayFieldTemplate(props) {
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <div className={props.className}>
+    <div className={props.className} id={props.idSchema.$id}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -421,6 +421,9 @@ class ArrayField extends Component {
       formData,
       disabled,
       readonly,
+      required,
+      label,
+      placeholder,
       autofocus,
       onBlur,
       onFocus,
@@ -445,9 +448,13 @@ class ArrayField extends Component {
         onFocus={onFocus}
         options={options}
         schema={schema}
+        registry={registry}
         value={items}
         disabled={disabled}
         readonly={readonly}
+        required={required}
+        label={label}
+        placeholder={placeholder}
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
