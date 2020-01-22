@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import OptionsList from "./OptionsList";
 import SelectionBar from "./SelectionBar";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const styles = {
   container: {
@@ -60,24 +61,24 @@ class AsyncMultiselectDropdown extends Component {
     if (e.keyCode === 8 && !this.state.searchText) {
       await this.setState({ selectedOptions: [] });
       this.onDeleteChoice();
-        const {
-          searchText,
-          pageNumber,
-          pageSize,
-          loadOptions,
-          loadOptionsCount
-        } = this.state;
+      const {
+        searchText,
+        pageNumber,
+        pageSize,
+        loadOptions,
+        loadOptionsCount
+      } = this.state;
 
-        let searchValue = undefined;
-        let resLoadOptions = await loadOptions(searchValue, pageNumber, pageSize);
-        let resLoadOptionsCount = await loadOptionsCount(searchValue);
+      let searchValue = undefined;
+      let resLoadOptions = await loadOptions(searchValue, pageNumber, pageSize);
+      let resLoadOptionsCount = await loadOptionsCount(searchValue);
 
-        await this.setState({
-          options: resLoadOptions,
-          pageNumber: pageNumber,
-          pageSize,
-          totalOptionsCount: resLoadOptionsCount
-        })
+      await this.setState({
+        options: resLoadOptions,
+        pageNumber: pageNumber,
+        pageSize,
+        totalOptionsCount: resLoadOptionsCount
+      })
     }
   }
 
@@ -270,58 +271,78 @@ class AsyncMultiselectDropdown extends Component {
         isDiabled={disabled}
       />
     );
+    const defaultProps = {
+      options: options,
+      getOptionLabel: option => option.title
+    };
+
     return (
-      <div className={customClass}>
-        <Grid
-          container
-          direction="row"
-          align-items="center"
-          className={classes.container}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label={label}
-              placeholder={placeholder}
-              className={classes.inputField}
-              margin="normal"
-              disabled={disabled}
-              value={searchText}
-              onChange={this.handleChange}
-              onKeyDown={this.onKeyDown}
-              inputProps={{
-                maxLength: maxLength
-              }}
-              onFocus={() => this.setState({ isSearching: true })}
-              InputProps={{
-                startAdornment: selected,
-                endAdornment: (
-                  <Icon onClick={() => this.setState({ isSearching: true })}>
-                    arrow_drop_down
+      <div>
+        {this.props.options.renderAsyncDropdown ?
+          (<div className={customClass}>
+            <Grid
+              container
+              direction="row"
+              align-items="center"
+              className={classes.container}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label={label}
+                  placeholder={placeholder}
+                  className={classes.inputField}
+                  margin="normal"
+                  disabled={disabled}
+                  value={searchText}
+                  onChange={this.handleChange}
+                  onKeyDown={this.onKeyDown}
+                  inputProps={{
+                    maxLength: maxLength
+                  }}
+                  onFocus={() => this.setState({ isSearching: true })}
+                  InputProps={{
+                    startAdornment: selected,
+                    endAdornment: (
+                      <Icon onClick={() => this.setState({ isSearching: true })}>
+                        arrow_drop_down
                   </Icon>
-                )
-              }}
-            />
-            {loader}
-          </Grid>
-        </Grid>
-        <Paper className="AsyncMultiselectDropdown-paper">
-          {isSearching && (
-            <OptionsList
-              isMultiselect={isMultiselect}
-              pageSize={pageSize}
-              totalOptionsCount={totalOptionsCount}
-              pageNumber={pageNumber}
-              cols={cols}
-              options={options}
-              handleChangePage={this.handleChangePage}
-              handleRowClick={this.handleRowClick}
-              closeOptionPanel={this.closeOptionPanel}
-              getIndexOfSelectedRowFromSelectedOptionsList={
-                this.getIndexOfSelectedRowFromSelectedOptionsList
-              }
-            />
-          )}
-        </Paper>
+                    )
+                  }}
+                />
+                {loader}
+              </Grid>
+            </Grid>
+            <Paper className="AsyncMultiselectDropdown-paper">
+              {isSearching && (
+                <OptionsList
+                  isMultiselect={isMultiselect}
+                  pageSize={pageSize}
+                  totalOptionsCount={totalOptionsCount}
+                  pageNumber={pageNumber}
+                  cols={cols}
+                  options={options}
+                  handleChangePage={this.handleChangePage}
+                  handleRowClick={this.handleRowClick}
+                  closeOptionPanel={this.closeOptionPanel}
+                  getIndexOfSelectedRowFromSelectedOptionsList={
+                    this.getIndexOfSelectedRowFromSelectedOptionsList
+                  }
+                />
+              )}
+            </Paper>
+          </div>) : (
+            <div style={{ width: 300 }}>
+              <Autocomplete
+                {...defaultProps}
+                id="debug"
+                debug
+                disableClearable={true}
+                onChange={this.handleRowClick}
+                renderInput={params => <TextField {...params} value={searchText} margin="normal" fullWidth />}
+              />
+            </div>
+          )
+        }
       </div>
     );
   }
