@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import OptionsList from "./OptionsList";
 import SelectionBar from "./SelectionBar";
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const styles = {
   container: {
@@ -183,13 +182,16 @@ class AsyncMultiselectDropdown extends Component {
     }
   };
 
-  onDeleteChoice = deletedChoice => {
+  onDeleteChoice = async deletedChoice => {
     let {
       selectionColumn,
       selectedOptions,
       isMultiselect,
       primaryColumn,
     } = this.state;
+
+    await this.fetchData();
+
     for (let index = 0; index < selectedOptions.length; index++) {
       if (selectedOptions[index][selectionColumn] === deletedChoice) {
         selectedOptions.splice(index, 1);
@@ -271,15 +273,9 @@ class AsyncMultiselectDropdown extends Component {
         isDiabled={disabled}
       />
     );
-    const defaultProps = {
-      options: options,
-      getOptionLabel: option => option.title
-    };
-
+    
     return (
-      <div>
-        {this.props.options.renderAsyncDropdown ?
-          (<div className={customClass}>
+        <div className={customClass}>
             <Grid
               container
               direction="row"
@@ -330,19 +326,6 @@ class AsyncMultiselectDropdown extends Component {
                 />
               )}
             </Paper>
-          </div>) : (
-            <div style={{ width: 300 }}>
-              <Autocomplete
-                {...defaultProps}
-                id="debug"
-                debug
-                disableClearable={true}
-                onChange={this.handleRowClick}
-                renderInput={params => <TextField {...params} value={searchText} margin="normal" fullWidth />}
-              />
-            </div>
-          )
-        }
       </div>
     );
   }

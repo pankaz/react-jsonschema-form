@@ -210,19 +210,13 @@ module.exports = {
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search...",
       "ui:widget": "asyncMultiselectDropdown",
-      "ui:disabled": false,
-      "ui:options": {
-        "renderAsyncDropdown" : false
-      }
+      "ui:disabled": false
     },
     movie: {
       "ui:emptyValue": "",
       "ui:placeholder": "Type your choice to search....",
       "ui:widget": "asyncMultiselectDropdown",
-      "ui:disabled": false,
-      "ui:options": {
-        "renderAsyncDropdown" : true
-      }
+      "ui:disabled": false
     },
     firstName: {
       "ui:emptyValue": "",
