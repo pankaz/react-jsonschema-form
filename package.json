@@ -1,6 +1,6 @@
 {
   "name": "react-jsonschema-materialui-forms",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "description": "A simple React component capable of building HTML forms out of a JSON schema based on the Material UI React library. Special credit goes to initial author Nicolas Perriault.",
   "scripts": {
     "build:readme": "toctoc README.md -w",
@@ -57,9 +57,9 @@
     "lodash.topath": "^4.5.2",
     "moment": "^2.24.0",
     "prop-types": "^15.5.8",
-    "react": "^16.8.6",
+    "react": "next",
     "react-autocomplete": "^1.8.1",
-    "react-dom": "^16.8.6",
+    "react-dom": "next",
     "react-html-parser": "^2.0.2"
   },
   "devDependencies": {
