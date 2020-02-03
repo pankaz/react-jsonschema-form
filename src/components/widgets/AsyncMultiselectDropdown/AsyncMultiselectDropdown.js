@@ -29,17 +29,41 @@ class AsyncMultiselectDropdown extends Component {
       options: [],
       pageNumber: 0,
       ...props.schema,
+      storeValueOnKeyDown: false
     };
+
   }
 
   componentDidMount() {
     this.initStateFromProps();
     this.fetchData();
     document.addEventListener("click", this.handleClickOutside, true);
+    document.addEventListener('keydown', this.keyHandler, true);
+    this.moveFocus();
   }
 
   componentWillUnmount() {
     document.removeEventListener("click", this.handleClickOutside, true);
+  }
+
+  keyHandler = async (e) => {
+    var TABKEY = 9;
+    if (e.keyCode === TABKEY) {
+      await this.setState({ isSearching: false });
+    }
+  }
+
+  moveFocus = () => {
+    const node = ReactDOM.findDOMNode(this);
+    node.addEventListener('keydown', function (e) {
+      const active = document.activeElement;
+      if (e.keyCode === 40 && active.nextSibling) {
+        active.nextSibling.focus();
+      }
+      if (e.keyCode === 38 && active.previousSibling) {
+        active.previousSibling.focus();
+      }
+    });
   }
 
   handleClickOutside = event => {
@@ -78,6 +102,14 @@ class AsyncMultiselectDropdown extends Component {
         pageSize,
         totalOptionsCount: resLoadOptionsCount
       })
+    }
+  }
+
+  actionOnKeyDown = async (e) => {
+    if (e.keyCode === 40) {
+      await this.setState({ storeValueOnKeyDown: e.keyCode, isSearching: true });
+    } else {
+      await this.setState({ storeValueOnKeyDown: false, isSearching: true });
     }
   }
 
@@ -145,7 +177,7 @@ class AsyncMultiselectDropdown extends Component {
     this.setState({ pageNumber: page }, () => this.fetchData());
   };
 
-  handleRowClick = async (event, selectedRow) => {
+  handleRowClick = async (selectedRow) => {
     let { selectedOptions, isMultiselect, primaryColumn } = this.state;
     const indexOfSelectedOption = this.getIndexOfSelectedRowFromSelectedOptionsList(
       selectedRow
@@ -273,59 +305,65 @@ class AsyncMultiselectDropdown extends Component {
         isDiabled={disabled}
       />
     );
-    
     return (
-        <div className={customClass}>
-            <Grid
-              container
-              direction="row"
-              align-items="center"
-              className={classes.container}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label={label}
-                  placeholder={placeholder}
-                  className={classes.inputField}
-                  margin="normal"
-                  disabled={disabled}
-                  value={searchText}
-                  onChange={this.handleChange}
-                  onKeyDown={this.onKeyDown}
-                  inputProps={{
-                    maxLength: maxLength
-                  }}
-                  onFocus={() => this.setState({ isSearching: true })}
-                  InputProps={{
-                    startAdornment: selected,
-                    endAdornment: (
-                      <Icon onClick={() => this.setState({ isSearching: true })}>
-                        arrow_drop_down
+      <div className={customClass}>
+        <Grid
+          container
+          direction="row"
+          align-items="center"
+          className={classes.container}>
+          <Grid item xs={12}>
+
+            <div onKeyDown={this.actionOnKeyDown}>
+              <TextField
+                fullWidth
+                label={label}
+                placeholder={placeholder}
+                className={classes.inputField}
+                margin="normal"
+                disabled={disabled}
+                value={searchText}
+                onChange={this.handleChange}
+                onKeyDown={this.onKeyDown}
+                inputProps={{
+                  maxLength: maxLength
+                }}
+                onFocus={() => this.setState({ isSearching: true })}
+                InputProps={{
+                  startAdornment: selected,
+                  endAdornment: (
+                    <Icon onClick={() => this.setState({ isSearching: true })}>
+                      arrow_drop_down
                   </Icon>
-                    )
-                  }}
-                />
-                {loader}
-              </Grid>
-            </Grid>
-            <Paper className="AsyncMultiselectDropdown-paper">
-              {isSearching && (
-                <OptionsList
-                  isMultiselect={isMultiselect}
-                  pageSize={pageSize}
-                  totalOptionsCount={totalOptionsCount}
-                  pageNumber={pageNumber}
-                  cols={cols}
-                  options={options}
-                  handleChangePage={this.handleChangePage}
-                  handleRowClick={this.handleRowClick}
-                  closeOptionPanel={this.closeOptionPanel}
-                  getIndexOfSelectedRowFromSelectedOptionsList={
-                    this.getIndexOfSelectedRowFromSelectedOptionsList
-                  }
-                />
-              )}
-            </Paper>
+                  )
+                }}
+              />
+            </div>
+            {loader}
+          </Grid>
+        </Grid>
+        <Paper className="AsyncMultiselectDropdown-paper">
+          <div>
+            {isSearching && (
+              <OptionsList
+                isMultiselect={isMultiselect}
+                pageSize={pageSize}
+                totalOptionsCount={totalOptionsCount}
+                pageNumber={pageNumber}
+                cols={cols}
+                options={options}
+                handleChangePage={this.handleChangePage}
+                handleRowClick={this.handleRowClick}
+                closeOptionPanel={this.closeOptionPanel}
+                getIndexOfSelectedRowFromSelectedOptionsList={
+                  this.getIndexOfSelectedRowFromSelectedOptionsList
+                }
+                valueOnKeyDown={this.state.storeValueOnKeyDown}
+                callbackOnKeyDown={this.actionOnKeyDown}
+              />
+            )}
+          </div>
+        </Paper>
       </div>
     );
   }
