@@ -26,7 +26,8 @@ const OptionsList = props => {
     handleChangePage,
     closeOptionPanel,
     valueOnKeyDown,
-    callbackOnKeyDown
+    callbackOnKeyDown,
+    classes
   } = props;
 
   const inputEl = useRef();
@@ -35,8 +36,6 @@ const OptionsList = props => {
   if (options.length == 0) {
     return <p>No Records Found...</p>;
   }
-
-  useEffect(() => handleKey());
 
   const handleKey = () => {
     if (valueOnKeyDown && valueOnKeyDown === 40) {
@@ -49,13 +48,16 @@ const OptionsList = props => {
     <Grid container className="AsyncMultDdown-opt__wrapper">
       <Grid item xs={12} className="AsyncMultDdown-opt__grid">
         <Table className="AsyncMultDdown-opt__table" tabIndex="-1">
+          {
+            valueOnKeyDown && valueOnKeyDown === 40 ? handleKey():''
+          }
           <TableHead tabIndex="-1" ref={inputEl}>
-            <TableRow tabIndex="0">
+            <TableRow tabIndex="0" className="AsyncMultDdown-opt-header">
               {/* <TableCell /> */}
-              <div tabIndex="0">
+              <div tabIndex="0" className={classes.headerWrapper}>
                 {cols.map((column, key) => {
                   if (!column.hasOwnProperty("hide")) {
-                    return <TableCell key={key}>{column.name}</TableCell>;
+                    return <TableCell className={classes.headerCell} key={key}>{column.name}</TableCell>;
                   } else {
                     hideColumns.push(column.key);
                   }
@@ -66,16 +68,18 @@ const OptionsList = props => {
           {/* <TableBody tabIndex="-1"> */}
 
           {options && options.length && options.map((row, rowkey) => (
-            <div tabIndex={rowkey + 1} onKeyPress={() => handleRowClick(row)}>
+            <div tabIndex={rowkey + 1} onKeyPress={() => handleRowClick(row)} className={classes.tableBodyDivision}>
               <TableRow
                 key={rowkey}
                 hover
                 selected={
                   getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
                 }
-                onClick={() => handleRowClick(row)}>
+                onClick={() => handleRowClick(row)}
+                className="AsyncMultDdown-opt-rows"
+                >
                 {isMultiselect ? (
-                  <TableCell key={rowkey}>
+                  <TableCell key={rowkey} className={classes.bodyCell}>
                     <Checkbox
                       checked={
                         getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
@@ -83,7 +87,7 @@ const OptionsList = props => {
                     />
                   </TableCell>
                 ) : (
-                    <TableCell key={rowkey}>
+                    <TableCell key={rowkey} className={classes.bodyCell}>
                       <Radio
                         checked={
                           getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
