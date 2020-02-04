@@ -1,0 +1,23 @@
+
+.AsyncMultDdown-opt-header .header-wrapper {
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+}
+
+.AsyncMultDdown-opt-header > div > th {
+    border-bottom: 0;
+}
+
+.AsyncMultDdown-opt__table > div > .AsyncMultDdown-opt-rows > td {
+    width: 100%;
+}
+
+.AsyncMultDdown-opt__table > div > .AsyncMultDdown-opt-rows > td:nth-child(1) {
+    width: 50px;
+}
+.AsyncMultDdown-opt__table > div > .AsyncMultDdown-opt-rows > td:nth-child(2) {
+    width: 50px;
+}
+
+.async > div > div > div > div {
+    margin-bottom: 0;
+}

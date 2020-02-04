@@ -18,7 +18,26 @@ const styles = {
   },
   inputField: {
     verticalAlign: "bottom",
+    marginBottom: '0'
   },
+  headerWrapper: {
+    borderBottom: '1px solid rgba(224, 224, 224, 1)'
+  },
+  headerCell : {
+    borderBottom: '0'
+  },
+  tableBodyDivision: {
+    width : '100%',
+    display: 'flex',
+    alignItems: 'center',
+    '& tr' : {
+      width: '100%',
+      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+      '& td': {
+        borderBottom: '0'
+      }
+    }
+  }
 };
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
@@ -31,7 +50,6 @@ class AsyncMultiselectDropdown extends Component {
       ...props.schema,
       storeValueOnKeyDown: false
     };
-
   }
 
   componentDidMount() {
@@ -343,7 +361,6 @@ class AsyncMultiselectDropdown extends Component {
           </Grid>
         </Grid>
         <Paper className="AsyncMultiselectDropdown-paper">
-          <div>
             {isSearching && (
               <OptionsList
                 isMultiselect={isMultiselect}
@@ -360,9 +377,9 @@ class AsyncMultiselectDropdown extends Component {
                 }
                 valueOnKeyDown={this.state.storeValueOnKeyDown}
                 callbackOnKeyDown={this.actionOnKeyDown}
+                classes={classes}
               />
             )}
-          </div>
         </Paper>
       </div>
     );
