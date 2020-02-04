@@ -18,26 +18,7 @@ const styles = {
   },
   inputField: {
     verticalAlign: "bottom",
-    marginBottom: '0'
   },
-  headerWrapper: {
-    borderBottom: '1px solid rgba(224, 224, 224, 1)'
-  },
-  headerCell : {
-    borderBottom: '0'
-  },
-  tableBodyDivision: {
-    width : '100%',
-    display: 'flex',
-    alignItems: 'center',
-    '& tr' : {
-      width: '100%',
-      borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      '& td': {
-        borderBottom: '0'
-      }
-    }
-  }
 };
 class AsyncMultiselectDropdown extends Component {
   constructor(props) {
@@ -57,7 +38,6 @@ class AsyncMultiselectDropdown extends Component {
     this.fetchData();
     document.addEventListener("click", this.handleClickOutside, true);
     document.addEventListener('keydown', this.keyHandler, true);
-    this.moveFocus();
   }
 
   componentWillUnmount() {
@@ -69,19 +49,6 @@ class AsyncMultiselectDropdown extends Component {
     if (e.keyCode === TABKEY) {
       await this.setState({ isSearching: false });
     }
-  }
-
-  moveFocus = () => {
-    const node = ReactDOM.findDOMNode(this);
-    node.addEventListener('keydown', function (e) {
-      const active = document.activeElement;
-      if (e.keyCode === 40 && active.nextSibling) {
-        active.nextSibling.focus();
-      }
-      if (e.keyCode === 38 && active.previousSibling) {
-        active.previousSibling.focus();
-      }
-    });
   }
 
   handleClickOutside = event => {
@@ -120,14 +87,6 @@ class AsyncMultiselectDropdown extends Component {
         pageSize,
         totalOptionsCount: resLoadOptionsCount
       })
-    }
-  }
-
-  actionOnKeyDown = async (e) => {
-    if (e.keyCode === 40) {
-      await this.setState({ storeValueOnKeyDown: e.keyCode, isSearching: true });
-    } else {
-      await this.setState({ storeValueOnKeyDown: false, isSearching: true });
     }
   }
 
@@ -314,72 +273,66 @@ class AsyncMultiselectDropdown extends Component {
     );
     const selected = (
       <SelectionBar
-        primaryColumn={primaryColumn}
-        selectedOptions={selectedOptions}
-        isMultiselect={isMultiselect}
-        selectionColumn={selectionColumn}
-        onDeleteChoice={this.onDeleteChoice}
-        getChipDisplayText={getChipDisplayText}
-        isDiabled={disabled}
-      />
+      primaryColumn={primaryColumn}
+      selectedOptions={selectedOptions}
+      isMultiselect={isMultiselect}
+      selectionColumn={selectionColumn}
+      onDeleteChoice={this.onDeleteChoice}
+      getChipDisplayText={getChipDisplayText}
+      isDiabled={disabled}
+    />
     );
     return (
       <div className={customClass}>
-        <Grid
+      <Grid
           container
           direction="row"
           align-items="center"
           className={classes.container}>
           <Grid item xs={12}>
-
-            <div onKeyDown={this.actionOnKeyDown}>
-              <TextField
-                fullWidth
-                label={label}
-                placeholder={placeholder}
-                className={classes.inputField}
-                margin="normal"
-                disabled={disabled}
-                value={searchText}
-                onChange={this.handleChange}
-                onKeyDown={this.onKeyDown}
-                inputProps={{
-                  maxLength: maxLength
-                }}
-                onFocus={() => this.setState({ isSearching: true })}
-                InputProps={{
-                  startAdornment: selected,
-                  endAdornment: (
-                    <Icon onClick={() => this.setState({ isSearching: true })}>
-                      arrow_drop_down
+            <TextField
+              fullWidth
+              label={label}
+              placeholder={placeholder}
+              className={classes.inputField}
+              margin="normal"
+              disabled={disabled}
+              value={searchText}
+              onChange={this.handleChange}
+              onKeyDown={this.onKeyDown}
+              inputProps={{
+                maxLength: maxLength
+              }}
+              onFocus={() => this.setState({ isSearching: true })}
+              InputProps={{
+                startAdornment: selected,
+                endAdornment: (
+                  <Icon onClick={() => this.setState({ isSearching: true })}>
+                    arrow_drop_down
                   </Icon>
-                  )
-                }}
-              />
-            </div>
+                )
+              }}
+            />
             {loader}
           </Grid>
         </Grid>
         <Paper className="AsyncMultiselectDropdown-paper">
-            {isSearching && (
-              <OptionsList
-                isMultiselect={isMultiselect}
-                pageSize={pageSize}
-                totalOptionsCount={totalOptionsCount}
-                pageNumber={pageNumber}
-                cols={cols}
-                options={options}
-                handleChangePage={this.handleChangePage}
-                handleRowClick={this.handleRowClick}
-                closeOptionPanel={this.closeOptionPanel}
-                getIndexOfSelectedRowFromSelectedOptionsList={
-                  this.getIndexOfSelectedRowFromSelectedOptionsList
-                }
-                valueOnKeyDown={this.state.storeValueOnKeyDown}
-                callbackOnKeyDown={this.actionOnKeyDown}
-                classes={classes}
-              />
-            )}
+          {isSearching && (
+            <OptionsList
+              isMultiselect={isMultiselect}
+              pageSize={pageSize}
+              totalOptionsCount={totalOptionsCount}
+              pageNumber={pageNumber}
+              cols={cols}
+              options={options}
+              handleChangePage={this.handleChangePage}
+              handleRowClick={this.handleRowClick}
+              closeOptionPanel={this.closeOptionPanel}
+              getIndexOfSelectedRowFromSelectedOptionsList={
+                this.getIndexOfSelectedRowFromSelectedOptionsList
+              }
+            />
+          )}
         </Paper>
       </div>
     );

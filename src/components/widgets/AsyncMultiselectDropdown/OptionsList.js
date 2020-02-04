@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from "react";
 
 import {
   Grid,
@@ -25,61 +25,40 @@ const OptionsList = props => {
     pageNumber,
     handleChangePage,
     closeOptionPanel,
-    valueOnKeyDown,
-    callbackOnKeyDown,
-    classes
   } = props;
-
-  const inputEl = useRef();
 
   const hideColumns = [];
   if (options.length == 0) {
     return <p>No Records Found...</p>;
   }
 
-  const handleKey = () => {
-    if (valueOnKeyDown && valueOnKeyDown === 40) {
-      inputEl.current.focus();
-      callbackOnKeyDown(false);
-    }
-  }
-
   return (
     <Grid container className="AsyncMultDdown-opt__wrapper">
       <Grid item xs={12} className="AsyncMultDdown-opt__grid">
-        <Table className="AsyncMultDdown-opt__table" tabIndex="-1">
-          {
-            valueOnKeyDown && valueOnKeyDown === 40 ? handleKey():''
-          }
-          <TableHead tabIndex="-1" ref={inputEl}>
-            <TableRow tabIndex="0" className="AsyncMultDdown-opt-header">
-              {/* <TableCell /> */}
-              <div tabIndex="0" className={classes.headerWrapper}>
-                {cols.map((column, key) => {
-                  if (!column.hasOwnProperty("hide")) {
-                    return <TableCell className={classes.headerCell} key={key}>{column.name}</TableCell>;
-                  } else {
-                    hideColumns.push(column.key);
-                  }
-                })}
-              </div>
+        <Table className="AsyncMultDdown-opt__table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              {cols.map((column, key) => {
+                if (!column.hasOwnProperty("hide")) {
+                  return <TableCell key={key}>{column.name}</TableCell>;
+                } else {
+                  hideColumns.push(column.key);
+                }
+              })}
             </TableRow>
           </TableHead>
-          {/* <TableBody tabIndex="-1"> */}
-
-          {options && options.length && options.map((row, rowkey) => (
-            <div tabIndex={rowkey + 1} onKeyPress={() => handleRowClick(row)} className={classes.tableBodyDivision}>
+          <TableBody>
+            {options.map((row, rowkey) => (
               <TableRow
                 key={rowkey}
                 hover
                 selected={
                   getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
                 }
-                onClick={() => handleRowClick(row)}
-                className="AsyncMultDdown-opt-rows"
-                >
+                onClick={() => handleRowClick(row)}>
                 {isMultiselect ? (
-                  <TableCell key={rowkey} className={classes.bodyCell}>
+                  <TableCell key={rowkey}>
                     <Checkbox
                       checked={
                         getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
@@ -87,23 +66,22 @@ const OptionsList = props => {
                     />
                   </TableCell>
                 ) : (
-                    <TableCell key={rowkey} className={classes.bodyCell}>
-                      <Radio
-                        checked={
-                          getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
-                        }
-                      />
-                    </TableCell>
-                  )}
+                  <TableCell key={rowkey}>
+                    <Radio
+                      checked={
+                        getIndexOfSelectedRowFromSelectedOptionsList(row) !== -1
+                      }
+                    />
+                  </TableCell>
+                )}
                 {Object.keys(row).map((cell, cellkey) => {
                   if (hideColumns.indexOf(cell) === -1) {
                     return <TableCell key={cellkey}>{row[cell]}</TableCell>;
                   }
                 })}
               </TableRow>
-            </div>
-          ))}
-          {/* </TableBody> */}
+            ))}
+          </TableBody>
         </Table>
       </Grid>
       <Grid item xs={12} className="AsyncMultDdown-opt-btn__container">
